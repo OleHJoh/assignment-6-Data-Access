@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository{
-    private final String CONNECTION_STRING = "jdbc:sqlite:/main/resources/Chinook_Sqlite.sqlite";
+    private final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
 
     @Override
     public List<Customer> getAll() {
@@ -47,7 +47,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             //SQL query
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
-                            + "FROM Customer WHERE Id = ?");
+                            + "FROM Customer WHERE CustomerId = ?");
             preparedStatement.setString(1,id);
             //Execute query
             ResultSet resultSet = preparedStatement.executeQuery();
