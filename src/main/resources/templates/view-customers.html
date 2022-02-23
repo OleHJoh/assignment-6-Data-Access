@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/main.css">
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Customers</title>
+</head>
+<body>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">CustomerId</th>
+                <th scope="col">FirstName</th>
+                <th scope="col">LastName</th>
+                <th scope="col">Country</th>
+                <th scope="col">PostalCode</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cust: ${customers}">
+                <th scope="row" th:text="${cust.getCustomerId()}"></th>
+                <td th:text="${cust.getFirstName()}"></td>
+                <td th:text="${cust.getLastName()}"></td>
+                <td th:text="${cust.getCountry()}"></td>
+                <td th:text="${cust.getPostalCode()}"></td>
+                <td th:text="${cust.getPhone()}"></td>
+                <td th:text="${cust.getEmail()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
