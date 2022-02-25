@@ -1,19 +1,14 @@
 package no.noroff.accelerate.assignment6DataAccess.controllers;
 
-import no.noroff.accelerate.assignment6DataAccess.models.Customer;
 import no.noroff.accelerate.assignment6DataAccess.repositories.CustomerRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-import java.util.List;
 
 @Controller
-@RequestMapping("api/v1/customers")
+@RequestMapping("customers")
 public class CustomerController {
 
     private CustomerRepository customerRepository;
@@ -29,8 +24,15 @@ public class CustomerController {
     }
 
     @GetMapping("{id}")
-    public  Customer getById(@PathVariable String id){
-        return customerRepository.getById(id);
+    public String getCustomerById(@PathVariable String id, Model model){
+       model.addAttribute("customer", customerRepository.getById(id));
+       return "view-customer";
+    }
+
+    @GetMapping("search?name={name}")
+    public String getCustomerByName(@PathVariable String name, Model model){
+        model.addAttribute("customer", customerRepository.getByName(name));
+        return "view-customer";
     }
 
 
