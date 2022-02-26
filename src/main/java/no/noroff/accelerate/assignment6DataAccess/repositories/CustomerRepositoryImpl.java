@@ -70,32 +70,64 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public Customer getByName(String name) {
-        Customer returnCustomer = null;
+    public List<Customer> getByName(String name) {
+        List<Customer> returnCustomers = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)){
             //SQL query
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
                             + "FROM Customer WHERE FirstName LIKE '%?%'");
-            preparedStatement.setString(1,name);
+            preparedStatement.setString(1, name);
             //Execute query
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()){
-                returnCustomer = new Customer(
-                        resultSet.getString("CustomerId"),
-                        resultSet.getString("FirstName"),
-                        resultSet.getString("LastName"),
-                        resultSet.getString("Country"),
-                        resultSet.getString("PostalCode"),
-                        resultSet.getString("Phone"),
-                        resultSet.getString("Email")
-                );
+                returnCustomers.add(
+                        new Customer(
+                                resultSet.getString("CustomerId"),
+                                resultSet.getString("FirstName"),
+                                resultSet.getString("LastName"),
+                                resultSet.getString("Country"),
+                                resultSet.getString("PostalCode"),
+                                resultSet.getString("Phone"),
+                                resultSet.getString("Email")
+                        ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return returnCustomer;
+        return returnCustomers;
+    }
+
+    @Override
+    public List<Customer> getOffsetLimit(String offset, String limit){
+        List<Customer> returnCustomers = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)){
+            //SQL query
+            PreparedStatement preparedStatement =
+                    conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
+                            + "FROM Customer LIMIT ?,?");
+            preparedStatement.setString(1, offset);
+            preparedStatement.setString(2, limit);
+            //Execute query
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                returnCustomers.add(
+                        new Customer(
+                                resultSet.getString("CustomerId"),
+                                resultSet.getString("FirstName"),
+                                resultSet.getString("LastName"),
+                                resultSet.getString("Country"),
+                                resultSet.getString("PostalCode"),
+                                resultSet.getString("Phone"),
+                                resultSet.getString("Email")
+                        ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return returnCustomers;
     }
 
     @Override

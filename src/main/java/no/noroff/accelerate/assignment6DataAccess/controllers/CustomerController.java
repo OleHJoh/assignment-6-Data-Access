@@ -29,7 +29,7 @@ public class CustomerController {
        return "view-customer";
     }
 
-    @GetMapping("search?name={name}")
+    @GetMapping("name/{name}")
     public String getCustomerByName(@PathVariable String name, Model model){
         model.addAttribute("customer", customerRepository.getByName(name));
         return "view-customer";

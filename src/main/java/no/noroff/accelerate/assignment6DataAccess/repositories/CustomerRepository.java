@@ -7,7 +7,8 @@ import java.util.List;
 public interface CustomerRepository {
     List<Customer> getAll();
     Customer getById(String id);
-    Customer getByName(String name);
+    List<Customer> getByName(String name);
+    List<Customer> getOffsetLimit(String offset, String limit);
     int add(Customer customer);
     int update(Customer customer);
     int delete(String id);

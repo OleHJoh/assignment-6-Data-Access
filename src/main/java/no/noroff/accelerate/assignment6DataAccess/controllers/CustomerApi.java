@@ -4,10 +4,7 @@ import no.noroff.accelerate.assignment6DataAccess.models.Customer;
 import no.noroff.accelerate.assignment6DataAccess.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +25,13 @@ public class CustomerApi {
             return customerRepository.getById(id);
         }
 
-        @GetMapping("search?name={name}")
-        public Customer getCustomerByName(@PathVariable String name){
+        @GetMapping("search")
+        public List<Customer> getCustomerByName(@RequestParam(value = "name", defaultValue = "") String name){
             return customerRepository.getByName(name);
+        }
+
+        @GetMapping("limit")
+        public List<Customer> getCustomersLimit(@RequestParam(value = "limit", defaultValue = "10") String limit, @RequestParam(value = "offset", defaultValue = "50") String offset){
+            return customerRepository.getOffsetLimit(offset,limit);
         }
 }
