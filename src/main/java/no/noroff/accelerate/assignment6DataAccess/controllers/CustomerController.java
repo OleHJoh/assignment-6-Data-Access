@@ -1,11 +1,13 @@
 package no.noroff.accelerate.assignment6DataAccess.controllers;
 
+import no.noroff.accelerate.assignment6DataAccess.models.Customer;
 import no.noroff.accelerate.assignment6DataAccess.repositories.CustomerRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("customers")
@@ -35,6 +37,22 @@ public class CustomerController {
         return "view-customer";
     }
 
+    @GetMapping("limit")
+    public String getCustomersLimit(@RequestParam(value = "limit", defaultValue = "10") String limit, @RequestParam(value = "offset", defaultValue = "0") String offset, Model model){
+        model.addAttribute("customers", customerRepository.getOffsetLimit(offset,limit));
+        return "view-customers";
+    }
 
+    @GetMapping("add")
+    public String showAddCustomer(Model model){
+        model.addAttribute("customer", customerRepository.getAll());
+        return "create-customer";
+    }
+
+    @PostMapping("add")
+    public String postCustomer(@ModelAttribute Customer customer, BindingResult errors, Model model){
+        model.addAttribute("customer", new Customer());
+        return "create-customer";
+    }
 
 }

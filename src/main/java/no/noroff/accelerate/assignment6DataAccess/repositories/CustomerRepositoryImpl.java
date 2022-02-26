@@ -136,7 +136,14 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             //SQL query
             PreparedStatement preparedStatement =
-                    conn.prepareStatement("INSERT INTO Customer(CustomerId,FirstName,LastName, Country, PostalCode, Phone, Email) VALUES(?,?,?,?,?,?,?)");
+                    conn.prepareStatement("INSERT INTO Customer(CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email) VALUES(?,?,?,?,?,?,?)");
+            preparedStatement.setString(1,customer.getCustomerId());
+            preparedStatement.setString(2,customer.getFirstName());
+            preparedStatement.setString(3,customer.getLastName());
+            preparedStatement.setString(4,customer.getCountry());
+            preparedStatement.setString(5,customer.getPostalCode());
+            preparedStatement.setString(6,customer.getPhone());
+            preparedStatement.setString(7,customer.getEmail());
             //Execute query
             result = preparedStatement.executeUpdate();
         } catch (SQLException e) {
