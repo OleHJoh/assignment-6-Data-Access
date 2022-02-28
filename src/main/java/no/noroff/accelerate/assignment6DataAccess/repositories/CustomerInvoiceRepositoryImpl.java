@@ -12,13 +12,15 @@ public class CustomerInvoiceRepositoryImpl implements CustomerInvoiceRepository{
 
     private final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
 
+    //Get request for joined tables of customer and invoice
     @Override
     public List<CustomerInvoiceJoined> getSpenderList() {
         List<CustomerInvoiceJoined> returnList = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             //SQL query
+            //Generates a sql query to join the two tables and get the total amount of money the customer have used
             PreparedStatement preparedStatement =
-                    conn.prepareStatement("SELECT firstname, lastname, SUM(total) FROM Invoice"
+                    conn.prepareStatement("SELECT firstname, lastname, SUM(total) FROM Invoice "
                             + "INNER JOIN Customer on Customer.CustomerId = Invoice.CustomerId GROUP BY Invoice.CustomerId ORDER BY SUM(total) DESC");
             //Execute query
             ResultSet resultSet = preparedStatement.executeQuery();

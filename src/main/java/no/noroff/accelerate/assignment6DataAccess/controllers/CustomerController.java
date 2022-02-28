@@ -1,6 +1,8 @@
 package no.noroff.accelerate.assignment6DataAccess.controllers;
 
 import no.noroff.accelerate.assignment6DataAccess.models.Customer;
+import no.noroff.accelerate.assignment6DataAccess.models.CustomerInvoiceJoined;
+import no.noroff.accelerate.assignment6DataAccess.repositories.CustomerInvoiceRepository;
 import no.noroff.accelerate.assignment6DataAccess.repositories.CustomerRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +16,10 @@ import java.util.List;
 public class CustomerController {
 
     private CustomerRepository customerRepository;
-
-    public CustomerController(CustomerRepository customerRepository) {
+    private CustomerInvoiceRepository customerInvoiceRepository;
+    public CustomerController(CustomerRepository customerRepository, CustomerInvoiceRepository customerInvoiceRepository) {
         this.customerRepository = customerRepository;
+        this.customerInvoiceRepository = customerInvoiceRepository;
     }
 
     @GetMapping
@@ -53,6 +56,30 @@ public class CustomerController {
     public String postCustomer(@ModelAttribute Customer customer, BindingResult errors, Model model){
         model.addAttribute("customer", new Customer());
         return "create-customer";
+    }
+
+    @GetMapping("update")
+    public String showUpdateCustomer(@RequestParam(value = "id", defaultValue = "1") String id, Model model){
+        model.addAttribute("customer", customerRepository.getById(id));
+        return "update-customer";
+    }
+
+    @PostMapping("update")
+    public String updateCustomer(@RequestParam(value = "id", defaultValue = "1") String id, @ModelAttribute Customer customer, BindingResult errors, Model model){
+        model.addAttribute("customer", customerRepository.getById(id));
+        return "update-customer";
+    }
+
+    @GetMapping("countries")
+    public String getCustomerNumbersForCountries(Model model) {
+        model.addAttribute("countries", customerRepository.customerListForCountries());
+        return "view-countries";
+    }
+
+    @GetMapping("spenders")
+    public String getSpenders(Model model){
+        model.addAttribute("customers", customerInvoiceRepository.getSpenderList());
+        return "view-spenders";
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 public class CustomerRepositoryImpl implements CustomerRepository{
     private final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
 
+    //Get request for every customer in the database
     @Override
     public List<Customer> getAll() {
         List<Customer> returnCustomers = new ArrayList<>();
@@ -41,11 +42,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return returnCustomers;
     }
 
+    //Get request for a customer by their customerId
     @Override
     public Customer getById(String id) {
         Customer returnCustomer = null;
         try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)){
             //SQL query
+            //Generates a SQL query that gets the customer that matches the id sent
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
                             + "FROM Customer WHERE CustomerId = ?");
@@ -70,11 +73,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return returnCustomer;
     }
 
+    //Get request for a customer or multiple customers if their name contains the letter parameter
     @Override
     public List<Customer> getByName(String name) {
         List<Customer> returnCustomers = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)){
             //SQL query
+            //Generates a SQL query that gets all customers where their name matches the letters string it's looking for
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
                             + "FROM Customer WHERE FirstName LIKE ?");
@@ -101,11 +106,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return returnCustomers;
     }
 
+    //Get request for customers where you can limit how many you will see and where it starts in the database
     @Override
     public List<Customer> getOffsetLimit(String offset, String limit){
         List<Customer> returnCustomers = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)){
             //SQL query
+            //Generates a SQL query that sets a limit and a offset
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
                             + "FROM Customer LIMIT ?,?");
@@ -132,11 +139,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return returnCustomers;
     }
 
+    //Post request to add a customer to the database
     @Override
     public int add(Customer customer) {
         int result = 0;
         try(Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             //SQL query
+            //Generates a SQL query that sends the customer element to get registered in the database
             PreparedStatement preparedStatement =
                     conn.prepareStatement("INSERT INTO Customer(CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email) VALUES(?,?,?,?,?,?,?)");
             preparedStatement.setString(1,customer.getCustomerId());
@@ -154,11 +163,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return result;
     }
 
+    //Patch request to update a customer in the database
     @Override
     public int update(Customer customer) {
         int result = 0;
-        //SQL query
         try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            //SQL query
+            //Generates a SQL query that updates the customer data using customerId as the object key
             PreparedStatement preparedStatement =
                     conn.prepareStatement("UPDATE Customer SET firstName = ?, lastName = ?, country = ?, postalCode = ?, phone = ?, email = ? WHERE customerId = ?");
             preparedStatement.setString(1, customer.getFirstName());
@@ -177,18 +188,21 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return result;
     }
 
+    //Delete request is not used, and haven't been made
     @Override
     public int delete(String id) {
         return 0;
     }
 
+    //Get request for getting every country and the registered customers to that country
     @Override
     public List<Country> customerListForCountries(){
         List<Country> returnCountry = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             //SQL query
+            //Generates a SQL query that gets every country and a number that represent the amount of registered customers to that country
             PreparedStatement preparedStatement =
-                    conn.prepareStatement("SELECT country, COUNT(customerId) FROM Customer GROUP By country ORDER BY COUNT(customerId) DESC");
+                    conn.prepareStatement("SELECT country, COUNT(customerId) AS 'people' FROM Customer GROUP By country ORDER BY COUNT(customerId) DESC");
             //Execute query
             ResultSet resultSet = preparedStatement.executeQuery();
 

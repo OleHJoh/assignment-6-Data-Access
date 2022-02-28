@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/main.css}">
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+
+    <h2>Search for a track</h2>
+    <form th:action="@{/search}" method="get">
+        <div class="form-group">
+            <input type="text" class="form-control" name="name" th:value="${name}" placeholder="Enter the name of a song">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Album</th>
+                <th scope="col">Artist</th>
+                <th scope="col">Genre</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="track: ${tracks}">
+                <th scope="row" th:text="${track.getName()}"></th>
+                <td th:text="${track.getAlbum()}"></td>
+                <td th:text="${track.getArtist()}"></td>
+                <td th:text="${track.getGenre()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

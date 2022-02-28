@@ -5,6 +5,7 @@ import no.noroff.accelerate.assignment6DataAccess.models.Customer;
 
 import java.util.List;
 
+//Repository for Customer handling
 public interface CustomerRepository {
     List<Customer> getAll();
     Customer getById(String id);
