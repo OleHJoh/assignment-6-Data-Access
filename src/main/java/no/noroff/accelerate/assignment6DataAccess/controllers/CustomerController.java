@@ -45,7 +45,7 @@ public class CustomerController {
 
     @GetMapping("add")
     public String showAddCustomer(Model model){
-        model.addAttribute("customer", customerRepository.getAll());
+        model.addAttribute("customer", new Customer());
         return "create-customer";
     }
 

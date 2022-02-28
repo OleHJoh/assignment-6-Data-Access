@@ -1,6 +1,7 @@
 package no.noroff.accelerate.assignment6DataAccess.repositories;
 
 import no.noroff.accelerate.assignment6DataAccess.models.Customer;
+import no.noroff.accelerate.assignment6DataAccess.models.Country;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -76,8 +77,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             //SQL query
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email "
-                            + "FROM Customer WHERE FirstName LIKE '%?%'");
-            preparedStatement.setString(1, name);
+                            + "FROM Customer WHERE FirstName LIKE ?");
+            preparedStatement.setString(1, "'%"+ name + "%'");
             //Execute query
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -96,6 +97,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.printf(String.valueOf(returnCustomers));
         return returnCustomers;
     }
 
@@ -154,11 +156,52 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public int update(Customer customer) {
-        return 0;
+        int result = 0;
+        //SQL query
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            PreparedStatement preparedStatement =
+                    conn.prepareStatement("UPDATE Customer SET firstName = ?, lastName = ?, country = ?, postalCode = ?, phone = ?, email = ? WHERE customerId = ?");
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getCountry());
+            preparedStatement.setString(4, customer.getPostalCode());
+            preparedStatement.setString(5, customer.getPhone());
+            preparedStatement.setString(6, customer.getEmail());
+            preparedStatement.setString(7, customer.getCustomerId());
+            //Execute query
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     @Override
     public int delete(String id) {
         return 0;
+    }
+
+    @Override
+    public List<Country> customerListForCountries(){
+        List<Country> returnCountry = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            //SQL query
+            PreparedStatement preparedStatement =
+                    conn.prepareStatement("SELECT country, COUNT(customerId) FROM Customer GROUP By country ORDER BY COUNT(customerId) DESC");
+            //Execute query
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                returnCountry.add(
+                        new Country(
+                                resultSet.getString("country"),
+                                resultSet.getString("people")
+                        ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return returnCountry;
     }
 }
